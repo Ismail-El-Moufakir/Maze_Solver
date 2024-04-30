@@ -1,8 +1,6 @@
 # Maze Solver with Q-Learning
 This project is part of the IN104 course at ENSTA. It demonstrates the application of the Q-learning algorithm to solve mazes. The maze solver uses a reinforcement learning approach where the agent learns to navigate through the maze by avoiding walls and finding the shortest path to the goal.
-'''
-test
-'''
+
 ### How It Works
 The maze solver initializes a grid-based environment from a text file (maze.txt). The Q-learning algorithm is then applied where the agent learns to navigate through the maze by:
 Exploring the environment using ε-greedy policy.
