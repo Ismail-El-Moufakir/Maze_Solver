@@ -13,6 +13,27 @@ int goal_row;
 int goal_col;
 
 
+// --------------------------------
+int Is_Wall(){
+    int* current = &visited[state_row][state_col];
+    if(*current == wall){
+        return(1);
+    }
+    else{
+        return(0);
+    }
+}
+int Is_Known(){
+    int* current = &visited[state_row][state_col];
+    if(*current == known){
+        return(1);
+    }
+    else{
+        return(0);
+    }
+}
+
+//-----------------------------------
 void alloc_mazeEnv(){
      mazeEnv = malloc(rows * sizeof(char*));
 
@@ -125,6 +146,14 @@ envOutput mazeEnv_step(action a){
     if((state_row == goal_row) && (state_col == goal_col)){
        reward = 10000;
        done   = 1;
+    }
+
+    if (Is_Wall() == 1){
+            reward -= 100;
+    }
+
+    if (Is_Known() == 1){
+        reward -= 50;
     }
 
     stepOut.reward = reward;

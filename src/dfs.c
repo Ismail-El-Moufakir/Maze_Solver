@@ -28,7 +28,6 @@ int dfs(int row, int col){
     return 0;
 }
 
-/*
 
 int main(){
    mazeEnv_make("../data/maze.txt");
@@ -37,10 +36,13 @@ int main(){
    printf("%d, %d \n", rows, cols);
    printf("number of actions :  %d \n", number_actions); 
    mazeEnv_render();
+   printf("11111 \n");
    dfs(start_row,start_col);
+   printf("222222 \n");
    add_crumbs();
+   printf("333333 \n");
    mazeEnv_render();
+   printf("4444444 \n");
    return 0;
 }
-*/
 

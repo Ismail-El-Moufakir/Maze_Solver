@@ -43,6 +43,8 @@ struct envOutput{
 
 typedef struct envOutput envOutput;
 
+int Is_Wall();
+
 void alloc_mazeEnv();
 
 void mazeEnv_make(char* );
