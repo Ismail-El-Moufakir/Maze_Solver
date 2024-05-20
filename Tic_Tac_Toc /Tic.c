@@ -6,16 +6,17 @@
 #include <time.h>
 #include "Tic.h"
 
-
+// Réinitialise le jeu
 void ResetGame(TicTacToe *game) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             game->board[i][j] = 0;
         }
     }
-    game->currentPlayer = 2;  // AI starts first
+    game->currentPlayer = 2;  // L'IA commence
 }
 
+// Effectue un mouvement si la case est vide
 bool MakeMove(TicTacToe *game, int row, int col) {
     if (game->board[row][col] == 0) {
         game->board[row][col] = game->currentPlayer;
@@ -25,6 +26,7 @@ bool MakeMove(TicTacToe *game, int row, int col) {
     return false;
 }
 
+// Vérifie s'il y a un gagnant
 int CheckWinner(TicTacToe *game) {
     for (int player = 1; player <= 2; player++) {
         for (int i = 0; i < 3; i++) {
@@ -41,6 +43,7 @@ int CheckWinner(TicTacToe *game) {
     return 0;
 }
 
+// Vérifie si le plateau est plein
 bool IsBoardFull(TicTacToe *game) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -52,17 +55,19 @@ bool IsBoardFull(TicTacToe *game) {
     return true;
 }
 
+// Initialise le tableau Q
 void InitializeQ() {
-    srand(time(NULL));  // Seed random number generator
+    srand(time(NULL));  // Graine pour le générateur de nombres aléatoires
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             for (int k = 0; k < 9; k++) {
-                Q[i][j][k] = ((double)rand() / RAND_MAX) / 100.0; // Small random values
+                Q[i][j][k] = ((double)rand() / RAND_MAX) / 100.0; // Petites valeurs aléatoires
             }
         }
     }
 }
 
+// Choisit une action en utilisant l'algorithme epsilon-greedy
 int ChooseAction(TicTacToe *game) {
     if ((rand() / (double)RAND_MAX) < EPSILON) {
         return rand() % 9;
@@ -81,6 +86,7 @@ int ChooseAction(TicTacToe *game) {
     }
 }
 
+// Met à jour le tableau Q
 void UpdateQ(TicTacToe *game, int prevAction, int reward, int nextAction) {
     int prevRow = prevAction / 3;
     int prevCol = prevAction % 3;
@@ -89,12 +95,13 @@ void UpdateQ(TicTacToe *game, int prevAction, int reward, int nextAction) {
     Q[prevRow][prevCol][prevAction] += ALPHA * (reward + GAMMA * Q[nextRow][nextCol][nextAction] - Q[prevRow][prevCol][prevAction]);
 }
 
+// Évalue l'état du jeu et retourne une récompense ou une pénalité
 int EvaluateGameState(TicTacToe *game, int player) {
     int winner = CheckWinner(game);
-    if (winner == player) return 10; // Reward for a win
-    if (winner == 3 - player) return -10; // Penalty for a loss
+    if (winner == player) return 10; // Récompense pour une victoire
+    if (winner == 3 - player) return -10; // Pénalité pour une défaite
 
-    // Penalty for leaving an opportunity for the opponent
+    // Pénalité pour laisser une opportunité à l'adversaire
     for (int i = 0; i < 3; i++) {
         if ((game->board[i][0] == 3 - player && game->board[i][1] == 3 - player && game->board[i][2] == 0) ||
             (game->board[i][0] == 0 && game->board[i][1] == 3 - player && game->board[i][2] == 3 - player) ||
@@ -117,9 +124,10 @@ int EvaluateGameState(TicTacToe *game, int player) {
         (game->board[0][2] == 3 - player && game->board[1][1] == 0 && game->board[2][0] == 3 - player)) {
         return -5;
     }
-    return 0; // No reward or penalty if the game is not yet finished or no critical opportunity for the opponent
+    return 0; // Pas de récompense ou pénalité si le jeu n'est pas encore terminé ou s'il n'y a pas d'opportunité critique pour l'adversaire
 }
 
+// Entraîne l'agent en le faisant jouer contre lui-même
 void TrainAgent(int iterations) {
     TicTacToe game;
     for (int i = 0; i < iterations; i++) {
@@ -143,11 +151,11 @@ void TrainAgent(int iterations) {
                     if (winner != 0) {
                         reward = (winner == game.currentPlayer) ? 10 : -10;
                     } else {
-                        reward = -1; // Penalty for a draw
+                        reward = -1; // Pénalité pour un match nul
                     }
                     break;
                 } else {
-                    reward = -0.1; // Small penalty for each move to encourage faster wins
+                    reward = -0.1; // Petite pénalité pour chaque coup pour encourager des victoires plus rapides
                 }
             }
         }
@@ -167,7 +175,7 @@ int main() {
     int prevAction = -1;
     int reward = 0;
 
-    // AI starts the game
+    // L'IA commence le jeu
     int action = ChooseAction(&game);
     int row = action / 3;
     int col = action % 3;
@@ -208,7 +216,7 @@ int main() {
                         ResetGame(&game);
                         prevAction = -1;
 
-                        // AI makes the first move again
+                        // L'IA fait le premier mouvement à nouveau
                         action = ChooseAction(&game);
                         row = action / 3;
                         col = action % 3;
@@ -238,7 +246,7 @@ int main() {
                     ResetGame(&game);
                     prevAction = -1;
 
-                    // AI makes the first move again
+                    // L'IA fait le premier mouvement à nouveau
                     action = ChooseAction(&game);
                     row = action / 3;
                     col = action % 3;
