@@ -1,3 +1,6 @@
+src/QLearningUpdate         : src/QLearningUpdate.o src/functions.o src/mazeEnv.o
+	gcc -I include/ -g -o src/QLearningUpdate src/QLearningUpdate.o src/functions.o src/mazeEnv.o -Wall
+
 src/QLearning         : src/QLearning.o src/functions.o src/mazeEnv.o
 	gcc -I include/ -g -o src/QLearning src/QLearning.o src/functions.o src/mazeEnv.o -Wall
 
